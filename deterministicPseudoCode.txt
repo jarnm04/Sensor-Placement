@@ -1,0 +1,29 @@
+Input G : Graph ; Verts : set of objects ; NumSens : number ;
+VertsEdge : set objects ; VertsTarget : set of objects ;
+P : set of objects ; F : set of objects ; Output S : set of objects
+    F = empty; S = empty
+    Main Loop
+        P = empty
+        Choose object v from VertsEdge, append to P
+        Find_Paths(P, Verts, VertsTarget, F)
+    Endloop
+    For i in range (1..NumSens)
+        S.append(F[i])
+    Endfor
+    Return S
+
+    Func Find_Paths(P, Verts, VertsTarget, F)
+        v_cur = P.last
+        If v_cur in VertsTarget
+            evaluate P
+            add edges in P to F
+        Else
+            find likelihood of neighbors of v_cur
+            sort neighbors by likelihood
+            For v in neighbors
+                If likelihood(v) > 0
+                    Find_Paths(P+v, Verts, VertsTarget, F)
+                Endif
+            Endfor
+        Endif Endif
+    Endfunc
