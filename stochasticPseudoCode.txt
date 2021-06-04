@@ -1,0 +1,48 @@
+Input G : Graph ; Input NumSens : number ; Verts : set of objects ;
+VertsEdge : set objects ; VertsTarget : set of objects ;
+C : set of objects ; Output S : set of objects
+    S = empty; i = 0
+    Initialize C
+    Main Loop, while i < 50
+        Find and remove duplicate candidates in C
+        Evaluate all members of C
+        Select those members of C that will be allowed to persist
+        Crossover 10 randomly chosen members of C
+        i = i + 1
+    Endloop
+    Select fittest c in C
+    Determine likelihood of each edge in c
+    place n most likely edges in c into S
+    return S
+
+    Func Initialize
+        Randomly create 50 candidates and add them to C
+        For each canditate c in C
+            While c is not feasible
+                repair c
+            Endwhile
+            Evalaute fitness of c
+            Generate reduction graph of c
+        Endfor
+    Endfunc
+
+    Func Repair
+        Randomly choose allele in gene string of c
+        If allele = 1
+            change allele to 0
+        Else if allele = 0
+            move down gene string to first 1 value, change to 0
+        Endif Endif
+    Endfunc
+
+    Func Crossover
+        create new gene by bitwise OR of parent genes
+        mutate gene
+        generate reduction graph of c
+        While not feasible
+            repair c
+            recreate reduction graph
+        Endwhile
+        evaluate fitness of c
+        add c to C
+    Endfunc
