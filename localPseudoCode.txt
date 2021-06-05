@@ -1,0 +1,32 @@
+###SET OF CANDIDATES
+Input G : Graph ; Verts : set of objects ; NumSens : number ;
+VertsEdge : set objects ; VertsTarget : set of objects ;
+###OTHER INTERMEDIATE AND OUTPUT SETS
+curFittest : tuple(bit string, value) ; Output S : set of objects
+###STOPPING CRITERIA
+Split : bool ; noImprovement : bool ;
+    ###INITIALIZATION
+    S = empty ; Split = false ; noImprovement = false ;
+    S = initial solution
+    Loop while (Split == false AND noImprovement == false)
+        ###NEIGHBORHOOD FUNCTION
+        neighborhood = empty set
+        evaluate neighbors and add them to neighborhood
+        ###SELECTION
+        SNew = choose the neighbor with highest value
+        ###FEASIBILITY
+        If SNew is not in tabu list
+            If SNew has better value than S
+                update curFittest
+            Endif
+            S = SNew
+        Else if SNew is in tabu list
+            return to selection and find new SNew
+        Endif Endif
+        ###STOPPING CRITERIA
+        check stopping criteria
+    Endloop
+    ###EVALUATION
+    Determine likelihood of each edge in curFittest
+    add n most likely edges in curFittest to S
+    return S
