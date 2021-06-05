@@ -1,9 +1,13 @@
+###SET OF CANDIDATES
 Input G : Graph ; Verts : set of objects ; NumSens : number ;
 VertsEdge : set objects ; VertsTarget : set of objects ;
+###OTHER INTERMEDIATE AND OUTPUT SETS
 P : set of objects ; F : set of objects ; Output S : set of objects
+    ###INITIALIZATION
     F = empty; S = empty
     Main Loop
         P = empty
+        ###DELAY TERMINATION <-- until all v from VertsEdge are explored
         Choose object v from VertsEdge, append to P
         Find_Paths(P, Verts, VertsTarget, F)
     Endloop
@@ -14,14 +18,18 @@ P : set of objects ; F : set of objects ; Output S : set of objects
 
     Func Find_Paths(P, Verts, VertsTarget, F)
         v_cur = P.last
+        ###OBJECTIVE FUNCTION
         If v_cur in VertsTarget
             evaluate P
             add edges in P to F
         Else
+            ###SELECTION FUNCTION
             find likelihood of neighbors of v_cur
             sort neighbors by likelihood
             For v in neighbors
+                ###FEASIBILITY FUNCTION
                 If likelihood(v) > 0
+                    ###NEXT STATE GENERATOR
                     Find_Paths(P+v, Verts, VertsTarget, F)
                 Endif
             Endfor
