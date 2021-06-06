@@ -57,6 +57,8 @@ def initializeGraph():
         if vertex.type == "E": edgeNodes.append(vertex)
         elif vertex.type == "T": targetNodes.append(vertex)
 
+    file.close()
+
     # now that all vertexes are made, create dictionary mapping each neighbor to the vertex object for that neighbor
     # this is done, instead of a matrix as indicated in the paper for simplicity's sake
     for vertex in vertices:
