@@ -3,8 +3,6 @@
 # For: AFIT/ENG CSCE 686, Spring 2021 Final Project
 
 import random
-import math
-import operator
 from copy import deepcopy
 
 # Define the objects that will be used for this execution - there are 3, as can be seen
@@ -177,7 +175,7 @@ def feasibility(cand: Candidate):
         cand.feasible = True
 
 # Repair function
-def repair(cand: Candidate, edges: dict[int, Edge]):
+def repair(cand: Candidate):
     feasibility(cand)
     while cand.feasible == False:
         # ensure the edges appearing in the candidate gene are actually contained in the array....
@@ -205,7 +203,7 @@ def repair(cand: Candidate, edges: dict[int, Edge]):
     return(cand)
 
 # This initializes the candidate population
-def initializePop(vertices: dict[int, Vertex], edges: dict[int, Edge], edgeNodes: list[Vertex], targetNodes: list[Vertex]):
+def initializePop(vertices: dict[int, Vertex], edges: dict[int, Edge]):
     geneLen = len(edges)
     candidatePopulation = []
     for _ in range(50):
@@ -224,7 +222,7 @@ def initializePop(vertices: dict[int, Vertex], edges: dict[int, Edge], edgeNodes
             if newCand.gene[a] == 0:
                 edgesToRemove.append(a+1)
         graphReduction(newCand, edgesToRemove)
-        newCand = repair(newCand, edges)
+        newCand = repair(newCand)
         if newCand.kill == False:
             candidatePopulation.append(newCand)
 
@@ -308,7 +306,7 @@ def crossover(pop: list[Candidate], vertices: dict[int, Vertex], edges: dict[int
         offspring.edges = deepcopy(edges)
 
         offspring = mutate(offspring, p1, p2)
-        offspring = repair(offspring, edges)
+        offspring = repair(offspring)
         if len(offspring.edges) == 0: offspring.kill = True        
         if offspring.kill == False:
             pop.append(offspring)
@@ -334,7 +332,7 @@ def main():
     numSensor = int(numSensor)
 
     # now initialize the candidate population
-    candidatePopulation = initializePop(vertices, edges, edgeNodes, targetNodes)
+    candidatePopulation = initializePop(vertices, edges)
 
     # breed new generations of candidates
     for _ in range(50):
@@ -356,8 +354,6 @@ def main():
     fittestCandEdges.sort(key=lambda e: e.likelihood, reverse=True)
 
     solution = []
-    # while len(fittestCandEdges) > 0:
-    #     for _ in range (numSensor):
 
     while len(fittestCandEdges) > 0:
         solEdge = fittestCandEdges.pop(0)
