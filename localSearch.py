@@ -237,8 +237,19 @@ def generateNeighbors(curSol: Neighbor, vertices: dict[int, Vertex], edges: dict
     return neighborhood
 
 
+def likelihood(edge: Edge, n, vertices: dict[int, Vertex]):
+    dest: Vertex = edge.dest
+    cumVulnNext = 0
+    for n in dest.neighborList:
+        cumVulnNext += vertices[n].numVulns
+    edge.likelihood = dest.numVulns * (cumVulnNext / n)
+    return edge
+
 def main():
     (vertices, edgeNodes, targetNodes, edges) = initializeGraph()
+
+    numSensor = input("Number of available sensors: ")
+    numSensor = int(numSensor)
 
     curSol = generateSeed(vertices, edges)
     curSol = evaluate(curSol, False, len(edgeNodes), len(targetNodes))
@@ -258,11 +269,13 @@ def main():
     while noImprovementIdx < 10 and split == False:
         # decrement time each move has remaining in tabu list & remove from list if it has stayed long enough
         if not firstIteration:
-            #BUG need to change where popping the keys from the dictionary - can't do inside loop
+            freeKeys = []
             for key in tabuList.keys():
                 tabuList[key] -= 1
                 if tabuList[key] <= 0:
-                    tabuList.pop(key)
+                    freeKeys.append(key)
+            for key in freeKeys:
+                tabuList.pop(key)
         neighborhood: list[Neighbor] = generateNeighbors(curSol, vertices, edges, len(edgeNodes), len(targetNodes))
         nextSol:Neighbor = neighborhood.pop(0)
         while nextSol.alteredAllele in list(tabuList.keys()):
@@ -276,6 +289,34 @@ def main():
             split = True
         noImprovementIdx += 1
         firstIteration = False
+
+    fittestNeighEdges = []
+    for e in range(len(curFittest.gene)):
+        if curFittest.gene[e] == 1:
+            fittestNeighEdges.append(edges[e+1])
+
+    for e in fittestNeighEdges:
+        e = likelihood(e, len(fittestNeighEdges), vertices)
+    
+    fittestNeighEdges.sort(key=lambda e: e.likelihood, reverse=True)
+
+    solution = []
+
+    while len(fittestNeighEdges) > 0:
+        solEdge = fittestNeighEdges.pop(0)
+        solution.append([solEdge.source.name, solEdge.dest.name])
+
+    for e in range(len(solution)):
+        solution[e] = sorted(solution[e])
+
+    solReduc = []
+    [solReduc.append(e) for e in solution if e not in solReduc]
+
+    print("Edges to cover: ")
+    for _ in range(numSensor):
+        if len(solReduc) > 0:
+            print(solReduc[0])
+            solReduc.pop(0)
 
 
 
