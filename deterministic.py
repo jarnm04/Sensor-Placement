@@ -38,8 +38,9 @@ def makeVertex(file_lines):
 
 # Initialization function. It will ingest a user indicated file and return that as a useable
 # array of vertices in the graph
-def initializeGraph():
-    fileName = input("Graph file name: ")
+def initializeGraph(fileName = None):
+    if not fileName:
+        fileName = input("Graph file name: ")
     file = open("{}".format(fileName), 'r')
     file_lines = file.readlines()
 
@@ -122,11 +123,12 @@ def findPaths(path, vertices, targetNodes, edgesofInterest):
 
 
 
-def main():
+def determDriver(file = None, numSens = None):
     # first up, ingest the graph file and create the data and data structures that we'll need
-    (vertices, edgeNodes, targetNodes) = initializeGraph()
+    (vertices, edgeNodes, targetNodes) = initializeGraph(file)
     edgesOfInterest = {}
-    numSens = input("Number of available sensors: ")
+    if not numSens:
+        numSens = input("Number of available sensors: ")
     numSens = int(numSens)
     solutionSet = []
 
@@ -138,10 +140,10 @@ def main():
 
     # pull the most likely edges out of edgesOfInterest and return them
     listOfEdges = []
-    print("Our edges of interest are:")
+    # print("Our edges of interest are:")
     for edge in edgesOfInterest:
         listOfEdges.append((edge, edgesOfInterest[edge]))
-        print("edge: {}, edge score: {}".format(edge, edgesOfInterest[edge]))
+        # print("edge: {}, edge score: {}".format(edge, edgesOfInterest[edge]))
 
     listOfEdges = sorted(listOfEdges,key=lambda x:(-x[1]))
 
@@ -152,6 +154,6 @@ def main():
     for i in range(len(solutionSet)):
         print("{}".format(solutionSet[i][0]))
 
-main()
+# determDriver()
 
-print("Finished Execution")
+# print("Finished Execution")

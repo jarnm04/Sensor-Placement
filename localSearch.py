@@ -4,6 +4,7 @@
 
 from os import name
 import random
+import math
 from copy import deepcopy
 
 class Neighbor(object):
@@ -58,8 +59,9 @@ def makeVertex(file_lines):
 
     return newVertex
 
-def initializeGraph():
-    filename = input("Graph file name: ")
+def initializeGraph(filename = None):
+    if not filename:
+        filename = input("Graph file name: ")
     file = open("{}".format(filename), 'r')
     file_lines = file.readlines()
 
@@ -178,8 +180,9 @@ def generateSeed(vertices: dict[int, Vertex], edges: dict[int, Edge]):
     # intialize the seed for the algo
     geneLen = len(edges)
     seed: Neighbor = Neighbor(geneLen)
-
-    numFlip = random.randint(0,(0.25 * geneLen))
+    temp = 0.25 * geneLen
+    temp = int(math.ceil(temp))
+    numFlip = random.randint(0,temp)
 
     # to start, randomly remove no more than a quarter of the edges from the graph
     temp = geneLen - 1
@@ -245,10 +248,11 @@ def likelihood(edge: Edge, n, vertices: dict[int, Vertex]):
     edge.likelihood = dest.numVulns * (cumVulnNext / n)
     return edge
 
-def main():
-    (vertices, edgeNodes, targetNodes, edges) = initializeGraph()
+def localSearchDriver(file = None, numSensor = None):
+    (vertices, edgeNodes, targetNodes, edges) = initializeGraph(file)
 
-    numSensor = input("Number of available sensors: ")
+    if not numSensor:
+        numSensor = input("Number of available sensors: ")
     numSensor = int(numSensor)
 
     curSol = generateSeed(vertices, edges)
@@ -320,6 +324,6 @@ def main():
 
 
 
-main()
+# main()
 
-print("Finished Execution")
+# print("Finished Execution")

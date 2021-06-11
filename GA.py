@@ -62,9 +62,10 @@ def makeVertex(file_lines):
     return newVertex
 
 # This function will initialize the graph, as well as other data structures we want to use
-def initializeGraph():
+def initializeGraph(fileName):
     # get a file from the user, open it and read the lines
-    fileName = input("Graph file name: ")
+    if not fileName:
+        fileName = input("Graph file name: ")
     file = open("{}".format(fileName), 'r')
     file_lines = file.readlines()
 
@@ -323,12 +324,12 @@ def likelihood(edge: Edge, n, vertices: dict[int, Vertex]):
 
 
 # Main loop of the program
-def main():
+def GADriver(file = None, numSensor = None):
     # first up, initialize the graph file and pull relevant data out of .txt file
-    (vertices, edgeNodes, targetNodes, edges) = initializeGraph()
+    (vertices, edgeNodes, targetNodes, edges) = initializeGraph(file)
 
-    numSensor = input("Number of available sensors: ")
-
+    if not numSensor:
+        numSensor = input("Number of available sensors: ")
     numSensor = int(numSensor)
 
     # now initialize the candidate population
@@ -371,6 +372,6 @@ def main():
             print(solReduc[0])
             solReduc.pop(0)
 
-main()
+# main()
 
-print("Finished Execution")
+# print("Finished Execution")
